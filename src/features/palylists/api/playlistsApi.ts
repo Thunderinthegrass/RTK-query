@@ -1,27 +1,42 @@
-// https://musicfun.it-incubator.app/api/1.0/
-// 47409d9d-b1ab-40d4-9c04-e4f3eeff2690
-
 import {createApi, fetchBaseQuery} from "@reduxjs/toolkit/query/react";
-import type {FetchPlaylistsArgs, PlaylistsResponse} from "@/features/palylists/api/playlistsApi.types.ts";
+import type {
+  CreatePlaylistArgs,
+  PlaylistData,
+  PlaylistsResponse,
+  UpdatePlaylistArgs
+} from "@/features/palylists/api/playlistsApi.types.ts";
 
 export const playlistsApi = createApi({
   reducerPath: 'playlistsApi',
+  tagTypes: ['Playlists'],
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_BASE_URL,
     headers: {
       'API-KEY': import.meta.env.VITE_API_KEY
+    },
+    prepareHeaders: (headers) => {
+      headers.set('Authorization', `Bearer ${import.meta.env.VITE_ACCESS_TOKEN}`)
+      return headers;
     }
   }),
   endpoints: (build) => ({
-    fetchPlaylists: build.query<PlaylistsResponse, FetchPlaylistsArgs>({
-      query: ({ pageSize }) => {
-        return {
-          method: 'get',
-          url: `playlists?pageSize=${pageSize}`
-        }
-      }
+    fetchPlaylists: build.query<PlaylistsResponse, void>({
+      query: () => ({method: 'get', url: `playlists`}),
+      providesTags: ['Playlists']
+    }),
+    createPlaylist: build.mutation<{data: PlaylistData}, CreatePlaylistArgs>({
+      query: (body) => ({method: 'post', url: `playlists`, body}),
+      invalidatesTags: ['Playlists']
+    }),
+    deletePlaylist: build.mutation<void, string>({
+      query: (playlistId) => ({method: 'delete', url: `playlists/${playlistId}`,}),
+      invalidatesTags: ['Playlists']
+    }),
+    updatePlaylist: build.mutation<void, { playlistId: string, body: UpdatePlaylistArgs }>({
+      query: ({playlistId, body}) => ({method: 'put', url: `playlists/${playlistId}`, body}),
+      invalidatesTags: ['Playlists']
     })
   })
 })
 
-export const { useFetchPlaylistsQuery } = playlistsApi
+export const { useFetchPlaylistsQuery, useCreatePlaylistMutation, useDeletePlaylistMutation, useUpdatePlaylistMutation } = playlistsApi

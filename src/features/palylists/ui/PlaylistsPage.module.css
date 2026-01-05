@@ -1,0 +1,30 @@
+.playlistsWrapper{
+    /*background: #f5dff3;*/
+    display: flex;
+    justify-content: center;
+}
+.playlistsInner{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 1030px;
+}
+.playlistItem{
+    /*border: 3px solid #111a01;*/
+    border-radius: 3px;
+    width: 250px;
+    padding: 10px;
+    background: #f5dff3;
+    span{
+        font-weight: bold;
+        font-size: 18px;
+    }
+}
+button{
+    cursor: pointer;
+    padding: 10px 17px;
+    background: #043a03;
+    border-radius: 3px;
+    color: #fff;
+    font-size: 16px;
+}
