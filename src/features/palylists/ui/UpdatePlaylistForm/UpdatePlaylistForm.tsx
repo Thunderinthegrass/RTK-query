@@ -1,33 +1,47 @@
 import { type SubmitHandler, useForm } from "react-hook-form";
-import type {UpdatePlaylistArgs} from "@/features/palylists/api/playlistsApi.types.ts";
+import type {PlaylistData, UpdatePlaylistArgs} from "@/features/palylists/api/playlistsApi.types.ts";
 import {useUpdatePlaylistMutation} from "@/features/palylists/api/playlistsApi.ts";
+import s from './UpdatePlaylistForm.module.css'
 
-export const UpdatePlaylistForm = ({playlistId}) => {
+type UpdatePlaylistFormProps = {
+  playlist: PlaylistData
+  onClose: () => void
+}
 
-  const { register, handleSubmit, reset } = useForm<UpdatePlaylistArgs>()
+export const UpdatePlaylistForm = ({playlist, onClose}: UpdatePlaylistFormProps) => {
+
+  const { register, handleSubmit, reset } = useForm<UpdatePlaylistArgs>({
+    defaultValues: {
+      title: playlist.attributes.title,
+      description: playlist.attributes.description,
+    }
+  })
 
   const [updatePlaylist] = useUpdatePlaylistMutation()
 
   const onSubmit: SubmitHandler<UpdatePlaylistArgs> = data => {
     updatePlaylist({
-      playlistId: playlistId,
+      playlistId: playlist.id,
       body: {
         title: data.title,
-        description: data.description,
+        description: data.description,//\ъъъъъъъъъъъ \\\\\\\\\\\\\
         tagIds: []
       }
-    }).unwrap().then(() => reset())
+    }).unwrap().then(() => {
+      reset()
+      onClose()
+    })
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} className={s.form}>
       <label>
         <input {...register('title')} placeholder={'title'} />
       </label>
       <label>
         <input {...register('description')} placeholder={'description'} />
       </label>
-      <button>Обновить плейлист</button>
+      <button>Сохранить изменения</button>
     </form>
   );
 };

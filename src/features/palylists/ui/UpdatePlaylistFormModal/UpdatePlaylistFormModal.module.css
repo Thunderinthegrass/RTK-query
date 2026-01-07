@@ -1,0 +1,17 @@
+.overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.overlayInner{
+    position: relative;
+}
+.button{
+    border: 1px solid #ffffff;
+    position: absolute;
+    right: -50px;
+    top: -50px;
+}
